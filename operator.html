@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operator Console</title>
+  <link rel="stylesheet" href="css/operator.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">★</span><div><div class="brand-title" id="hdr-title">Holiday Survey Showdown</div><div class="brand-sub">Operator console</div></div></div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="game" class="active">Main Game</button>
+      <button data-tab="fast" id="tab-btn-fast">Lightning Round</button>
+      <button data-tab="setup">Setup &amp; Questions</button>
+      <button data-tab="look">Look &amp; Sound</button>
+      <button data-tab="help">How to Run</button>
+    </nav>
+    <div class="top-actions">
+      <span class="conn" id="conn"><i></i><span>Audience screen not open</span></span>
+      <button class="btn primary" id="btn-open-board">Open audience screen</button>
+      <button class="btn" data-action="undo" id="btn-undo" title="Undo (Ctrl/⌘+Z)">↶ Undo</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main">
+      <!-- MAIN GAME TAB -->
+      <section class="tab" id="tab-game">
+        <div class="rounds-strip" id="rounds-strip"></div>
+        <div id="round-panel"></div>
+      </section>
+
+      <!-- LIGHTNING TAB -->
+      <section class="tab hidden" id="tab-fast"><div id="fast-panel"></div></section>
+
+      <!-- SETUP TAB -->
+      <section class="tab hidden" id="tab-setup">
+        <div class="setup-grid">
+          <div class="card">
+            <h2>Game settings</h2>
+            <label>Game title (shown on the big screen)<input id="set-title" type="text"></label>
+            <div class="row2">
+              <label>Left team name<input id="set-teamA" type="text"></label>
+              <label>Right team name<input id="set-teamB" type="text"></label>
+            </div>
+            <label>Winning score <small>(first team to reach it wins; 0 = play every round, highest score wins)</small><input id="set-target" type="number" min="0" step="10"></label>
+            <div class="row2">
+              <label>Bonus round name<input id="set-bonusName" type="text"></label>
+              <label>Bonus goal (points)<input id="set-bonusTarget" type="number" min="1" step="10"></label>
+            </div>
+            <div class="row2">
+              <label>Player 1 timer (sec)<input id="set-timer1" type="number" min="5" step="1"></label>
+              <label>Player 2 timer (sec)<input id="set-timer2" type="number" min="5" step="1"></label>
+            </div>
+            <div class="btn-row">
+              <button class="btn primary" id="btn-save-setup">Save settings</button>
+              <span class="saved-note" id="setup-saved"></span>
+            </div>
+            <hr>
+            <h3>Start over</h3>
+            <p class="muted">Clears scores and progress, keeps your questions and settings.</p>
+            <button class="btn danger" id="btn-new-game">New game</button>
+          </div>
+
+          <div class="card questions-card">
+            <h2>Survey questions</h2>
+            <div class="source-note" id="source-note"></div>
+            <textarea id="data-text" spellcheck="false"></textarea>
+            <div class="btn-row">
+              <button class="btn primary" id="btn-save-data">Save questions</button>
+              <label class="btn file-btn">Import .txt / .csv<input type="file" id="file-import" accept=".txt,.csv,.tsv,text/plain"></label>
+              <button class="btn" id="btn-export">Download as .txt</button>
+              <button class="btn" id="btn-reload-file">Reload from survey-data.js</button>
+              <button class="btn" id="btn-print">Print host sheet</button>
+            </div>
+            <div class="parse-preview" id="parse-preview"></div>
+            <details class="format-help">
+              <summary>Format cheat-sheet</summary>
+<pre>[x1] Name something people bring to a holiday potluck.
+Casserole, 31
+Cookies, 24
+Pie, 17
+
+[x2] Name something you might find in a stocking.
+Candy, 40
+Socks, 18
+
+[sudden] Tiebreaker question (only the #1 answer counts)
+Countdown, 44
+Kiss, 23
+
+[fast] Bonus round question (use 5 of these)
+Skiing, 41
+Snowboarding, 22</pre>
+              <ul>
+                <li>A line that doesn't end in a number starts a new question.</li>
+                <li>Answer lines end with the number of people who said it. Comma, tab, “|” or a space before the number all work, so you can paste two columns from a spreadsheet.</li>
+                <li>Answers get sorted by points automatically. Up to 8 fit on the board.</li>
+                <li>Tags: <code>[x1]</code> <code>[x2]</code> <code>[x3]</code> multiplier, <code>[sudden]</code> tiebreaker, <code>[fast]</code> bonus round.</li>
+                <li>If a question ends with a number, start it with <code>Q:</code>.</li>
+              </ul>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOOK & SOUND TAB -->
+      <section class="tab hidden" id="tab-look">
+        <div class="look-grid">
+          <div class="card">
+            <h2>Background image</h2>
+            <div class="bg-layout">
+            <div>
+            <div class="bg-thumb" id="bg-thumb"></div>
+            <div class="source-note" id="bg-status"></div>
+            <div class="btn-row">
+              <label class="btn primary file-btn">Choose image…<input type="file" id="bg-file" accept="image/*"></label>
+              <button class="btn" id="bg-remove">Use default background</button>
+            </div>
+            </div>
+            <div>
+            <div class="look-controls">
+              <label class="slider">Darken<input type="range" id="look-dim" min="0" max="0.85" step="0.05"></label>
+              <label class="slider">Blur<input type="range" id="look-blur" min="0" max="12" step="1"></label>
+              <label class="check"><input type="checkbox" id="look-snow"> Falling snow</label>
+              <label class="check"><input type="checkbox" id="look-lights"> String lights along the top</label>
+            </div>
+            <p class="muted small">A wide 16:9 picture (1920×1080 or bigger) looks best. Darken it a little so the board stays easy to read; the live preview on the right updates as you go.</p>
+            <p class="muted small"><b>Folder option:</b> put a file named <code>background.jpg</code> (or <code>.png</code> / <code>.webp</code>) in the <code>images</code> folder and reload. A picture chosen here takes priority over the folder file.</p>
+            </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Music &amp; sound effects</h2>
+            <p class="muted small">Click <b>Replace…</b> to use your own audio file (mp3, m4a, wav) for any sound. It's saved in this browser, so you only do it once. <b>Reset</b> goes back to the built-in sound. The slider sets that sound's volume; drag it all the way left to turn it off.</p>
+            <div class="sound-list" id="sound-list"></div>
+            <div class="btn-row">
+              <button class="btn" id="sounds-rescan">Rescan sounds folder</button>
+              <button class="btn danger" id="sounds-reset-all">Reset all sounds</button>
+            </div>
+            <details class="format-help">
+              <summary>Folder option: file names to use</summary>
+              <p class="muted small">Instead of clicking Replace, you can drop files into the <code>sounds</code> folder with these exact names (any of .mp3, .m4a, .wav, .ogg), then click <b>Rescan sounds folder</b>. Sounds picked with Replace take priority over folder files.</p>
+              <table class="keys" id="sound-names"></table>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- HELP TAB -->
+      <section class="tab hidden" id="tab-help">
+        <div class="card help">
+          <h2>Before the party</h2>
+          <ol>
+            <li>Put your survey results in <b>Setup &amp; Questions</b> (or in <code>survey-data.js</code>) and set the team names.</li>
+            <li>Connect the laptop to the TV/projector as an <b>extended</b> display (not mirrored). Set the Mac's sound output to the TV or speaker.</li>
+            <li>Click <b>Open audience screen</b>, drag that window onto the TV, then click inside it once to make it full screen. All sound plays from this operator window.</li>
+            <li>Optional: <b>Print host sheet</b> so the host can read the questions from paper.</li>
+            <li>Optional: in <b>Look &amp; Sound</b>, pick your own background picture and swap in your own music or sound effects.</li>
+          </ol>
+          <h2>Running a main round</h2>
+          <ol>
+            <li><b>Start the round</b> from the strip at the top. The big screen shows the round intro, then the board.</li>
+            <li><b>Face-off:</b> the host reads the question. When a player buzzes in, press <kbd>Q</kbd> (left team) or <kbd>P</kbd> (right team). If their answer is on the board, click it (or press <kbd>1</kbd>–<kbd>8</kbd>). If it isn't, press <kbd>X</kbd> for a single X.</li>
+            <li>The face-off winner decides to play or pass. Click <b>“… plays”</b> for whichever team will play.</li>
+            <li><b>Play:</b> click each correct answer. Press <kbd>X</kbd> for a strike. Three strikes moves to the steal.</li>
+            <li><b>Steal:</b> the other team gets one guess. If it's on the board, click it and they win the bank. If not, click <b>Steal failed</b> (or <kbd>X</kbd>) and the playing team keeps the bank.</li>
+            <li>If the playing team finds every answer, they win the bank automatically.</li>
+            <li>Afterwards, <b>Reveal remaining</b> shows the answers nobody got (no points). Then start the next round.</li>
+          </ol>
+          <h2>Scoring</h2>
+          <ul>
+            <li>Every answer revealed during the round, including the face-off, adds <i>points × multiplier</i> to the bank.</li>
+            <li>The team that wins the round gets the whole bank. A successful steal also adds the stolen answer to the bank.</li>
+            <li>The first team to the winning score (default 300) wins. If you set it to 0, the highest score after the last round wins.</li>
+            <li><b>Sudden death</b> (tiebreaker): only the #1 answer is on the board. Whoever names it wins the round (triple points). Use <b>Award bank</b> to give it to them.</li>
+            <li>Made a mistake? Use <b>Undo</b> (<kbd>⌘Z</kbd>) or edit the scores in the sidebar.</li>
+          </ul>
+          <h2>Bonus round</h2>
+          <ol>
+            <li>Pick two players from the winning team. Player 2 leaves the room so they can't hear. Player 1 gets 20 seconds to answer the 5 questions.</li>
+            <li>Type what they say in each box, or click a survey answer chip to fill in the text and points. Click <b>✗ 0</b> if it isn't on the list.</li>
+            <li>Press <kbd>Space</kbd> to start or pause the timer.</li>
+            <li>Use <b>Reveal</b> on each row (answer first, then points), or <b>Reveal all</b> for the whole sequence.</li>
+            <li>Switch to Player 2. Turn on <b>Hide Player 1's answers</b>, give them 25 seconds, and press <kbd>D</kbd> to play the duplicate sound if they repeat an answer.</li>
+            <li>The total hitting the goal (default 200) sets off the win celebration.</li>
+          </ol>
+          <h2>Keyboard shortcuts</h2>
+          <table class="keys">
+            <tr><td><kbd>1</kbd>–<kbd>8</kbd></td><td>Reveal answer</td></tr>
+            <tr><td><kbd>X</kbd></td><td>Wrong answer / strike / steal failed</td></tr>
+            <tr><td><kbd>Q</kbd> / <kbd>P</kbd></td><td>Left / right team buzzed in</td></tr>
+            <tr><td><kbd>Space</kbd></td><td>Bonus round timer start/pause</td></tr>
+            <tr><td><kbd>D</kbd></td><td>Bonus round duplicate sound</td></tr>
+            <tr><td><kbd>⌘Z</kbd> / <kbd>Ctrl+Z</kbd></td><td>Undo</td></tr>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <aside id="sidebar">
+      <div class="card side-card">
+        <div class="side-head"><h3>Audience screen</h3><span class="muted small">live preview</span></div>
+        <div class="preview-box"><iframe id="preview" src="board.html?preview=1" title="Audience preview"></iframe></div>
+        <div class="seg" id="screen-seg">
+          <button data-screen="title">Title</button>
+          <button data-screen="round">Board</button>
+          <button data-screen="fast">Bonus</button>
+          <button data-screen="winner">Winner</button>
+        </div>
+      </div>
+
+      <div class="card side-card">
+        <h3>Scores</h3>
+        <div id="score-editor"></div>
+      </div>
+
+      <div class="card side-card">
+        <div class="side-head"><h3>Music &amp; sound</h3><span class="muted small" id="audio-status">loading…</span></div>
+        <div class="pad" id="pad">
+          <button class="pad-btn wide music" data-sound="theme" id="btn-theme">▶ Theme music</button>
+          <button class="pad-btn wide" data-action="stopMusic">■ Stop music</button>
+          <button class="pad-btn" data-sound="ding">Ding</button>
+          <button class="pad-btn" data-sound="strike">Buzzer</button>
+          <button class="pad-btn" data-sound="buzzin">Buzz-in</button>
+          <button class="pad-btn" data-sound="applause">Applause</button>
+          <button class="pad-btn" data-sound="fanfare">Fanfare</button>
+          <button class="pad-btn" data-sound="roundStart">Sting</button>
+        </div>
+        <label class="slider">Effects<input type="range" id="vol-sfx" min="0" max="1" step="0.05"></label>
+        <label class="slider">Music<input type="range" id="vol-music" min="0" max="1" step="0.05"></label>
+        <label class="check"><input type="checkbox" id="mute"> Mute all</label>
+      </div>
+    </aside>
+  </div>
+
+  <div id="toast"></div>
+  <div id="print-area"></div>
+
+  <script src="survey-data.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/operator.js"></script>
+</body>
+</html>

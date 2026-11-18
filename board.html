@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audience Screen</title>
+  <link rel="stylesheet" href="css/board.css">
+</head>
+<body>
+  <div id="stage">
+    <div id="bg-image"></div>
+    <div id="bg-dim"></div>
+    <canvas id="snow" width="1600" height="900"></canvas>
+    <div id="lights"></div>
+
+    <!-- TITLE -->
+    <section class="screen" id="screen-title">
+      <div class="title-wrap">
+        <div class="title-kicker">★ Tonight's Game ★</div>
+        <h1 class="title-main" id="title-main">Holiday Survey Showdown</h1>
+        <div class="title-teams">
+          <div class="tt team-a" id="title-team-a">Team A</div>
+          <div class="tt-vs">VS</div>
+          <div class="tt team-b" id="title-team-b">Team B</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN ROUND -->
+    <section class="screen" id="screen-round">
+      <div class="round-head">
+        <div class="pill round-label" id="round-label">Round 1</div>
+        <div class="head-title" id="head-title">Holiday Survey Showdown</div>
+        <div class="pill mult-label" id="mult-label">Single Points</div>
+      </div>
+      <div class="question" id="question"><span id="question-text"></span></div>
+
+      <div class="bank-row">
+        <div class="bank"><div class="bank-val" id="bank-val">0</div><div class="bank-lbl">Round Points</div></div>
+        <div class="strike-marks" id="strike-marks"><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="pod pod-a" id="pod-a">
+        <div class="pod-tag" id="pod-a-tag"></div>
+        <div class="pod-name" id="pod-a-name">Team A</div>
+        <div class="pod-score" id="pod-a-score">0</div>
+      </div>
+
+      <div class="board-frame">
+        <div class="board" id="board"></div>
+      </div>
+
+      <div class="pod pod-b" id="pod-b">
+        <div class="pod-tag" id="pod-b-tag"></div>
+        <div class="pod-name" id="pod-b-name">Team B</div>
+        <div class="pod-score" id="pod-b-score">0</div>
+      </div>
+    </section>
+
+    <!-- BONUS ROUND -->
+    <section class="screen" id="screen-fast">
+      <div class="fm-head" id="fm-head">Lightning Round</div>
+      <div class="fm-timer" id="fm-timer"><span id="fm-timer-val">20</span></div>
+      <div class="fm-labels"><span id="fm-l1">Player 1</span><span id="fm-l2">Player 2</span></div>
+      <div class="fm-frame">
+        <div class="fm-col" id="fm-col-0"></div>
+        <div class="fm-col" id="fm-col-1"></div>
+      </div>
+      <div class="fm-total"><span class="lbl">Total</span><span class="val" id="fm-total">0</span></div>
+      <div class="fm-goal" id="fm-goal">Goal: 200</div>
+      <div class="fm-win" id="fm-win"><div class="fm-win-inner"><div class="k">We have a winner!</div><div class="v" id="fm-win-val">200</div><div class="s">points</div></div></div>
+    </section>
+
+    <!-- WINNER -->
+    <section class="screen" id="screen-winner">
+      <div class="win-wrap">
+        <div class="win-kicker">Congratulations</div>
+        <div class="win-name" id="win-name">Team A</div>
+        <div class="win-sub" id="win-sub">Wins!</div>
+        <div class="win-scores" id="win-scores"></div>
+      </div>
+    </section>
+
+    <!-- OVERLAYS -->
+    <div id="x-overlay"></div>
+    <div id="intro-overlay">
+      <div class="intro-round" id="intro-round">Round 1</div>
+      <div class="intro-ribbon" id="intro-ribbon">Double Points</div>
+    </div>
+    <canvas id="confetti" width="1600" height="900"></canvas>
+    <div id="waiting">
+      <div class="w-inner">
+        <div class="w-title">Audience screen</div>
+        <div class="w-sub">Waiting for the operator console… open <b>operator.html</b> and click <b>“Open audience screen”</b>.</div>
+      </div>
+    </div>
+  </div>
+  <div id="fs-hint">Click anywhere for full screen</div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/board.js"></script>
+</body>
+</html>
