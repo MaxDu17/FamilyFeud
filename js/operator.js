@@ -7,6 +7,9 @@
    * Config & data
    * ========================================================= */
   let setup = Object.assign({}, SS.defaultSetup, SS.store.get('ss_setup', {}));
+  // Upgrade the old stock names while keeping personalized settings and game state.
+  if (setup.title === 'Holiday Survey Showdown') setup.title = SS.defaultSetup.title;
+  if (setup.bonusName === 'Lightning Round') setup.bonusName = SS.defaultSetup.bonusName;
   let savedText = SS.store.get('ss_data_text', null);
   const fileText = () => String(window.SURVEY_DATA || '').replace(/^\s*\n/, '');
   let dataText = savedText != null ? savedText : fileText();
@@ -1084,7 +1087,7 @@
   const fmtSize = (n) => (n > 1e6 ? (n / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1e3)) + ' KB');
 
   /* ---------- background ---------- */
-  let look = Object.assign({ dim: 0.35, blur: 0, snow: true, lights: true }, SS.store.get('ss_look', {}));
+  let look = Object.assign({ dim: 0.35, blur: 0, snow: false, lights: false }, SS.store.get('ss_look', {}));
   let bg = { kind: 'builtin' }; // or {kind:'upload', blob, name, size} or {kind:'file', url}
   let bgThumbUrl = null;
 

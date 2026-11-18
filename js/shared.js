@@ -7,11 +7,11 @@
   SS.FAST_QUESTIONS = 5;
 
   SS.defaultSetup = {
-    title: 'Holiday Survey Showdown',
+    title: 'Family Feud',
     teamA: 'The Elves',
     teamB: 'The Reindeer',
     target: 300,          // first team to this many points wins (0 = just play every round)
-    bonusName: 'Lightning Round',
+    bonusName: 'Fast Money',
     bonusTarget: 200,
     timer1: 20,
     timer2: 25,

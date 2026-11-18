@@ -1,6 +1,8 @@
-# Holiday Survey Showdown
+# Family Feud — Family Game Night
 
-A survey-style game show for your holiday party. It runs in a web browser with no internet and no installs. One window is the **operator console** (on the laptop); the other is the **audience screen** (on the TV or projector).
+A Family Feud–style game show for your family party, with a blue-and-gold studio, illuminated answer board, oval title badge, and Fast Money round. It runs in a web browser with no internet and no installs. One window is the **operator console** (on the laptop); the other is the **audience screen** (on the TV or projector).
+
+The studio artwork and fonts are bundled locally. Snow and holiday string lights are off by default; you can still enable them in **Look & Sound**. Existing custom titles, questions, scores, and audio selections are preserved. The previous stock titles update to “Family Feud” and “Fast Money.”
 
 ## Quick start
 

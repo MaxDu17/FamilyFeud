@@ -5,19 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Audience Screen</title>
   <link rel="stylesheet" href="css/board.css">
+  <link rel="stylesheet" href="css/studio-board.css">
 </head>
 <body>
   <div id="stage">
+    <div class="studio-set" aria-hidden="true"></div>
     <div id="bg-image"></div>
     <div id="bg-dim"></div>
     <canvas id="snow" width="1600" height="900"></canvas>
-    <div id="lights"></div>
+    <div id="lights" class="off"></div>
 
     <!-- TITLE -->
     <section class="screen" id="screen-title">
       <div class="title-wrap">
-        <div class="title-kicker">★ Tonight's Game ★</div>
-        <h1 class="title-main" id="title-main">Holiday Survey Showdown</h1>
+        <div class="title-kicker">Let’s play</div>
+        <div class="title-emblem"><h1 class="title-main" id="title-main">Family Feud</h1></div>
+        <div class="title-edition">Family game night</div>
         <div class="title-teams">
           <div class="tt team-a" id="title-team-a">Team A</div>
           <div class="tt-vs">VS</div>
@@ -30,7 +33,7 @@
     <section class="screen" id="screen-round">
       <div class="round-head">
         <div class="pill round-label" id="round-label">Round 1</div>
-        <div class="head-title" id="head-title">Holiday Survey Showdown</div>
+        <div class="head-title" id="head-title">Family Feud</div>
         <div class="pill mult-label" id="mult-label">Single Points</div>
       </div>
       <div class="question" id="question"><span id="question-text"></span></div>
@@ -59,7 +62,7 @@
 
     <!-- BONUS ROUND -->
     <section class="screen" id="screen-fast">
-      <div class="fm-head" id="fm-head">Lightning Round</div>
+      <div class="fm-head" id="fm-head">Fast Money</div>
       <div class="fm-timer" id="fm-timer"><span id="fm-timer-val">20</span></div>
       <div class="fm-labels"><span id="fm-l1">Player 1</span><span id="fm-l2">Player 2</span></div>
       <div class="fm-frame">

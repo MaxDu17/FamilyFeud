@@ -1,0 +1,81 @@
+/* Family Feud studio skin. Layout, flip animations and state classes live in board.css. */
+:root {
+  --ink: #fffaf0;
+  --blue-hi: #226bd0;
+  --blue-lo: #082458;
+  --green-hi: #226bd0;
+  --green-lo: #082458;
+  --gold: #ffcf68;
+  --gold-mid: #dba344;
+  --gold-text: linear-gradient(180deg, #fff6c8 0%, #ffdb80 40%, #eda73c 56%, #ffdf88 85%, #fff2bd 100%);
+}
+.studio-set { position: absolute; inset: 0; background: url('../images/studio-set.svg') center / cover; pointer-events: none; }
+#lights { opacity: 0; }
+#lights:not(.off) { opacity: 1; }
+.title-wrap { inset: 60px 80px 65px; }
+.title-kicker { font-size: 23px; letter-spacing: 12px; margin-bottom: 30px; color: #d7e6ff; }
+.title-emblem {
+  position: relative; width: 960px; height: 450px; flex: none;
+  display: grid; place-items: center; border-radius: 50%; border: 10px solid #ffdc82;
+  background: radial-gradient(ellipse at 50% 35%, #225da8 0%, #102d69 60%, #06153c 100%);
+  box-shadow: 0 0 0 5px #895018, 0 0 0 13px #f3b34b, 0 0 0 17px #2c190a, 0 0 65px #4999ff66, inset 0 0 0 8px #091c46, inset 0 0 0 11px #6c9bd2, 0 28px 50px #0009;
+}
+.title-emblem::before { content: ''; position: absolute; inset: 19px; border: 3px dotted #ffe1a0; border-radius: 50%; opacity: .8; pointer-events: none; }
+.title-main {
+  width: 760px; height: 350px; font-family: var(--heavy); font-size: 140px; line-height: 1; letter-spacing: -5px;
+  -webkit-text-stroke: 2px #87430a; filter: drop-shadow(0 5px 0 #834713) drop-shadow(0 10px 0 #04112e);
+  animation: none; background: var(--gold-text); background-clip: text; -webkit-background-clip: text;
+  overflow-wrap: anywhere;
+}
+.title-main.classic-title { white-space: pre-line; line-height: .94; letter-spacing: -7px; }
+.title-edition { margin-top: 33px; font: 18px var(--heavy); text-transform: uppercase; letter-spacing: 8px; color: #c2d8ff; }
+.title-teams { margin-top: 36px; gap: 30px; }
+.tt { font-size: 36px; min-width: 250px; padding: 12px 36px; border: 2px solid #e6b75d; background: linear-gradient(#1855a6, #071d50) !important; box-shadow: inset 0 0 0 4px #08234f, 0 8px 25px #0006; }
+.tt-vs { font-size: 24px; }
+.round-head { top: 48px; left: 75px; right: 75px; }
+.pill { border-radius: 5px; background: #071c48; border-color: #ac8848; font-size: 19px; }
+.head-title { font-family: var(--heavy); letter-spacing: -1px; font-size: 32px; max-width: 820px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.question { top: 123px; height: 100px; background: linear-gradient(#0d2a63ee, #071a42ee); border: 2px solid #6988ba; border-radius: 9px; box-shadow: inset 0 0 0 4px #061535, 0 8px 20px #0005; }
+#question-text { height: 86px; }
+.bank-row { top: 242px; height: 93px; }
+.bank { width: 236px; height: 95px; border-radius: 44% / 25%; border: 5px solid #efbe63; background: radial-gradient(ellipse at top, #164d9c, #041539); box-shadow: 0 0 0 3px #563817, inset 0 0 0 3px #7299ce, 0 0 30px #2873ff55; }
+.bank-val { font-family: var(--display); font-size: 64px; color: #fff; background: none; text-shadow: 0 0 14px #6faaff88; }
+.bank-lbl { font-size: 10px; margin-top: 1px; }
+.strike-marks { top: 24px; }
+.board-frame { top: 371px; height: 430px; padding: 18px; border-radius: 60px; background: #030a1f; border: 6px solid #7a9ac8;
+  box-shadow: 0 0 0 5px #07132b, 0 0 0 12px #efb957, 0 0 0 17px #70491d, 0 0 0 22px #ffdc8b, 0 0 50px #4f91ff66, 0 28px 50px #000a; }
+.board-frame::before { content: ''; position: absolute; inset: -15px; border: 5px dotted #fff6ce; border-radius: 67px; pointer-events: none; }
+.board { gap: 10px 16px; }
+.board.sudden { padding: 95px 85px; }
+.face { border-radius: 5px; }
+.front { background: linear-gradient(#285fbc 0%, #174b9e 45%, #0d2866 50%, #174991 100%); border: 2px solid #b6d4f2; box-shadow: inset 0 0 0 3px #0b275c, inset 0 3px 12px #ffffff30; }
+.front::before { background: repeating-linear-gradient(0deg, transparent 0 3px, #000 3px 4px); opacity: .1; }
+.ornament { width: 94px; height: 61px; border-radius: 50%; margin: 0; background: linear-gradient(#102e68, #06153b); border: 3px solid #e9c985; box-shadow: 0 0 0 2px #061632, inset 0 0 12px #0008; }
+.ornament::before, .ornament::after { display: none; }
+.ornament span { font-family: var(--display); font-size: 45px; color: #fff8d5; text-shadow: 0 3px 0 #030b24; }
+.slot.empty .front { background: linear-gradient(#102b61, #07183d); border-color: #325582; }
+.back { background: linear-gradient(#2161b8, #103675); border: 2px solid #d0e2fb; box-shadow: inset 0 0 0 3px #0a2256; }
+.ans { color: #fff; padding: 0 12px 0 18px; text-shadow: 0 3px 0 #071b43; }
+.pts { width: 98px; border-left: 3px solid #c7d5e6; background: linear-gradient(#0b2451, #04102d); color: #fff; font-family: var(--display); }
+.slot.free .pts { background: #223858; color: #b8c9e0; }
+.pod { top: 447px; height: 252px; padding: 16px 10px 10px; border-radius: 34px 34px 18px 18px; border: 4px solid #d4ad65; background: linear-gradient(#1d56a1, #0a2555 56%, #050e28); }
+.pod-name { height: 82px; }
+.pod-score { height: 112px; border-radius: 8px; border: 2px solid #7492bd; background: #040e28; font-family: var(--display); font-size: 78px; text-shadow: 0 0 15px #689fff66; }
+.pod-tag { font-size: 15px; }
+.fm-head { top: 66px; font-family: var(--heavy); font-size: 62px; }
+.fm-labels { top: 289px; }
+.fm-frame { background: #030a1f; border: 4px solid #91afd6; border-radius: 20px; box-shadow: 0 0 0 6px #07132b, 0 0 0 13px #efb957, 0 0 0 17px #70491d, 0 22px 50px #0008; }
+.fm-row, .fm-col.hidden-col .fm-row { border-radius: 4px; background: linear-gradient(#194c99, #0b2457); border-color: #7697c4; }
+.fm-row.has-text { background: linear-gradient(#2365bb, #123c7d); border-color: #c3d7f2; }
+.fm-row.has-text .fm-ans { color: #fff; }
+.fm-row.has-pts .fm-pts { background: #061638; color: #fff; }
+.fm-pts { border-color: #9ab4db; font-family: var(--display); }
+.fm-row.zero .fm-pts { background: #6b1427; }
+.fm-total, .fm-timer { border-color: #edbc65; background: linear-gradient(#164080, #061430); }
+.win-name { width: 1300px; }
+.win-kicker { font-size: 28px; letter-spacing: 12px; }
+.win-scores .ws { border-color: #e6b75d; }
+.intro-ribbon { background: linear-gradient(#286bc2, #123773); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

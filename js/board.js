@@ -15,7 +15,7 @@
   fitStage();
 
   /* ---------------- decorations ---------------- */
-  let snowOn = true;
+  let snowOn = false;
   buildLights();
   startSnow();
   const confetti = makeConfetti($('confetti'));
@@ -191,7 +191,9 @@
     const tk = st.title + '|' + st.teams.join('|');
     if (tk !== titleKey) {
       titleKey = tk;
-      $('title-main').textContent = st.title;
+      const classicTitle = /^family\s+feud$/i.test(st.title.trim());
+      $('title-main').classList.toggle('classic-title', classicTitle);
+      $('title-main').textContent = classicTitle ? 'Family\nFeud' : st.title;
       $('head-title').textContent = st.title;
       $('title-team-a').textContent = st.teams[0];
       $('title-team-b').textContent = st.teams[1];
@@ -229,7 +231,7 @@
   }
 
   function fitAllStatic() {
-    fitBlock($('title-main'), 168, 60);
+    fitBlock($('title-main'), 168, 40);
     fitBlock($('pod-a-name'), 40, 20);
     fitBlock($('pod-b-name'), 40, 20);
   }
@@ -515,7 +517,7 @@
 
   /* ---------------- background & look ---------------- */
   let bgUrl = null;
-  let look = { dim: 0.35, blur: 0, snow: true, lights: true };
+  let look = { dim: 0.35, blur: 0, snow: false, lights: false };
   function applyAssets(msg) {
     if (bgUrl && bgUrl.startsWith('blob:')) URL.revokeObjectURL(bgUrl);
     bgUrl = null;
