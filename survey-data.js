@@ -25,79 +25,93 @@
  *  replace them with your real survey results.
  * ============================================================
  */
+
+
 window.SURVEY_DATA = `
 # ---------- MAIN GAME ----------
 
-[x1] Name something people bring to a holiday potluck.
-Casserole, 31
-Cookies, 24
-Pie, 17
-Wine, 11
-Salad, 8
-Ham, 5
+[x1] Name a robot incident encountered while conducting research
+Robot part breaking / wearing out, 14
+Fire, smoke, overheating, 8
+Getting hurt by robot, 5
+Broke an object / committed warcrimes, 5
+Robot ignored E-stop, 2
+Getting cat-called a "clanker keeper", 1
 
-[x1] Name a reason you might leave a holiday party early.
-Too tired, 34
-Had too much to drink, 21
-Boring, 16
-Another party, 12
-Babysitter, 9
-Bad weather, 5
+[x1] Name a Robotics Startup
+Physical Intelligence, 15
+Figure, 8
+Sunday, 7
+Generalist, 5
+Figure AI, 3
+Sharpa, 3
 
-[x2] Name something you might find in a stocking.
-Candy, 40
-Socks, 18
-Gift card, 14
-Coal, 11
-Orange, 7
+[x2] Name an influential paper
+Attention is All you Need, 24
+Diffusion Policy, 10
+ALOHA, 7
+UMI, 6
+Pi0, 3
+Behavioral Prompting, 1
 
-[x3] Name a popular holiday movie.
-Home Alone, 33
-Elf, 27
-It's a Wonderful Life, 15
-A Christmas Story, 12
-The Grinch, 9
 
-# Only played if the game is tied at the end:
-[sudden] Name something people do on New Year's Eve.
-Countdown, 44
-Kiss, 23
-Drink champagne, 18
-Make resolutions, 9
+[x3] Name a meme or brainrot content.
+67, 18
+Skibdi Toilet, 15
+Ligma / Sugondese, 10
+Tung Tung Tung Sahur, 5
+Big Chungus, 5
+Amogus, 3
+
 
 # ---------- BONUS ROUND (5 questions) ----------
 
-[fast] Name a winter sport.
-Skiing, 41
-Snowboarding, 22
-Ice skating, 17
-Hockey, 12
-Sledding, 6
+[fast] Type of nut
+Walnut, 7
+Cashew, 3
+Peanut, 3
+Hazelnut, 2
+Macadamia, 2
+Pecan, 2
 
-[fast] Name a holiday drink.
-Eggnog, 45
-Hot chocolate, 26
-Cider, 13
-Mulled wine, 9
-Champagne, 5
+[fast] Graphics Card
+RTX 5090, 6
+RTX Pro 6000, 4
+A100, 2
+GPU, 2
 
-[fast] Name one of Santa's reindeer.
-Rudolph, 48
-Dasher, 15
-Prancer, 12
-Blitzen, 10
-Comet, 8
+[fast] Christmas song
+All I Want for Christmas Is You, 10
+Jingle Bells, 6
+Jingle Bell Rock, 2
+Last Christmas, 2
+Winter Wonderland, 2
+Rudolph, 2
 
-[fast] Name something you shovel.
-Snow, 72
-Dirt, 13
-Food, 8
-Manure, 5
+[fast] Hard robotics concept
+Manipulation, 10
+Control, 8
+Flow Matching, 6
+Sim2Real, 3 
+ROPE, 1
 
-[fast] Name a New Year's resolution.
-Lose weight, 39
-Exercise more, 24
-Save money, 15
-Eat healthier, 12
-Quit smoking, 6
+[fast] Holiday food / drink
+Hot Chocolate, 18
+Potato Dish, 8
+Turkey, 8
+Eggnog, 4
+Pie, 4
+
+[fast] Robot arm.
+Franka, 22
+ARX, 8
+Sawyer, 6
+Universal Robotics, 6
+
+[fast] Santa's Reindeer.
+Rudolph, 25
+Vixen, 3
+Cupid, 2
+Dasher, 2
+Donner, 2
 `;
