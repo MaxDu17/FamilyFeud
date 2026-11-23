@@ -50,14 +50,14 @@ Snowboarding, 22
 
 The sample file has 4 main rounds (×1, ×1, ×2, ×3), a sudden-death tiebreaker, and 5 bonus questions. Delete or add rounds as you like.
 
-## Scoring rules (same as the TV format)
+## Scoring rules
 
 - **Face-off:** one player from each team buzzes in. The higher-ranked answer wins control, and that team chooses to play or pass.
 - **Play:** the controlling team keeps answering. Every revealed answer, including the face-off answers, adds *points × multiplier* to the round bank. A wrong answer is a strike.
 - **Three strikes:** the other team gets one steal guess. If it's on the board, they win the whole bank plus that answer. If not, the playing team gets the bank.
 - **Clearing the board** before 3 strikes wins the bank automatically.
 - **Winning:** the first team to **300** wins by default. Change this in Setup, or set it to 0 to play every round and have the highest score win.
-- **Bonus round:** two players, 5 questions, 20 and 25 seconds. A duplicate answer gets the "try again" sound. Reaching **200** combined triggers the win celebration.
+- **Bonus round (house rule):** two players, 5 questions, 20 and 25 seconds. Player 1 scores for the left team and Player 2 for the right. Revealed points automatically count toward team totals and the final winner, even below 200. Hiding a row or resetting the bonus round removes its points; hiding the entire Player 1 column does not. Edits and Undo update the totals without counting points twice. A duplicate answer gets the "try again" sound. Reaching **200** combined still triggers the celebration.
 
 Made a mistake? **Undo** (⌘Z) steps back one action, and you can type over either score in the sidebar.
 

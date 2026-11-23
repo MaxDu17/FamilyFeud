@@ -379,6 +379,9 @@
     if (!fastBuilt) buildFast();
     $('fm-head').textContent = st.bonusName;
     $('fm-goal').textContent = 'Goal: ' + st.bonusTarget;
+    [0, 1].forEach((p) => {
+      $('fm-l' + (p + 1)).textContent = `Player ${p + 1} · ${st.teams[p]}`;
+    });
     $('fm-l1').classList.toggle('active', fm.player === 0);
     $('fm-l2').classList.toggle('active', fm.player === 1);
 

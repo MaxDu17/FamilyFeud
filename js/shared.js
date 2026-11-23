@@ -17,6 +17,19 @@
     timer2: 25,
   };
 
+  // Main-round awards stay separate so a bonus reveal can never be added twice.
+  SS.fastScores = function (fm) {
+    const scores = [0, 0];
+    fm.rows.forEach((rows, player) => {
+      rows.forEach((row) => { if (row.showPts) scores[player] += row.pts || 0; });
+    });
+    return scores;
+  };
+  SS.finalScores = function (game) {
+    const bonus = SS.fastScores(game.fm);
+    return game.scores.map((score, team) => score + bonus[team]);
+  };
+
   SS.multLabel = function (mult, sudden) {
     if (sudden) return 'Sudden Death';
     if (mult === 2) return 'Double Points';

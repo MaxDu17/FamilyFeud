@@ -29,11 +29,16 @@
     };
   }
   function newGame() {
-    return { version: 1, phase: 'title', scores: [0, 0], roundIndex: -1, round: null, results: {}, fm: newFm(), winner: null };
+    return { version: 1, scoringVersion: 2, phase: 'title', scores: [0, 0], roundIndex: -1, round: null, results: {}, fm: newFm(), winner: null };
   }
   let game = SS.store.get('ss_game', null);
   if (!game || game.version !== 1) game = newGame();
   game.fm.timer.running = false;
+  let savedScores = SS.finalScores(game);
+  if (game.scoringVersion !== 2) {
+    game.scoringVersion = 2;
+    if (game.phase === 'winner') game.winner = computeWinner();
+  }
 
   let currentTab = 'game';
   const undoStack = [];
@@ -114,7 +119,7 @@
     return {
       title: setup.title,
       teams: [setup.teamA, setup.teamB],
-      scores: game.scores.slice(),
+      scores: SS.finalScores(game),
       phase: game.phase,
       target: setup.target,
       bonusName: setup.bonusName,
@@ -132,7 +137,14 @@
   /* =========================================================
    * Commit / undo
    * ========================================================= */
-  function save() { SS.store.set('ss_game', game); }
+  function save() {
+    const scores = SS.finalScores(game);
+    if (game.phase === 'winner' && scores.some((score, t) => score !== savedScores[t])) {
+      game.winner = computeWinner();
+    }
+    savedScores = scores;
+    SS.store.set('ss_game', game);
+  }
   function commit(fx, opts) {
     save();
     renderAll();
@@ -148,6 +160,8 @@
     game = JSON.parse(undoStack.pop());
     game.fm.timer.running = false;
     revealSeq++;
+    fmSeq++;
+    savedScores = SS.finalScores(game); // Undo restores the saved winner, including manual overrides.
     commit([], { sync: true });
     toast('Undone');
   }
@@ -301,8 +315,9 @@
   }
 
   function computeWinner() {
-    if (game.scores[0] === game.scores[1]) return -1;
-    return game.scores[0] > game.scores[1] ? 0 : 1;
+    const scores = SS.finalScores(game);
+    if (scores[0] === scores[1]) return -1;
+    return scores[0] > scores[1] ? 0 : 1;
   }
 
   function setScreen(phase) {
@@ -327,9 +342,9 @@
 
   function setScore(team, v) {
     v = Math.max(-9999, Math.min(99999, Math.round(Number(v) || 0)));
-    if (game.scores[team] === v) return;
+    if (SS.finalScores(game)[team] === v) return;
     snapshot();
-    game.scores[team] = v;
+    game.scores[team] = v - SS.fastScores(game.fm)[team];
     commit([]);
   }
 
@@ -338,18 +353,20 @@
     snapshot();
     stopTimer();
     revealSeq++;
+    fmSeq++;
     game = newGame();
     commit([], { sync: true });
     toast('New game ready');
   }
 
   function gameStatus() {
+    const scores = SS.finalScores(game);
     const main = parsed.rounds.map((r, i) => ({ r, i })).filter((x) => !x.r.sudden);
     const allMainDone = main.length > 0 && main.every((x) => game.results[x.i]);
     let reached = -1;
     if (setup.target > 0) {
-      if (game.scores[0] >= setup.target && game.scores[0] >= game.scores[1]) reached = 0;
-      else if (game.scores[1] >= setup.target) reached = 1;
+      if (scores[0] >= setup.target && scores[0] >= scores[1]) reached = 0;
+      else if (scores[1] >= setup.target) reached = 1;
     }
     const sudden = parsed.rounds.findIndex((r, i) => r.sudden && !game.results[i]);
     let next = -1;
@@ -357,7 +374,7 @@
       if (!parsed.rounds[i].sudden && !game.results[i]) { next = i; break; }
     }
     if (next === -1) next = parsed.rounds.findIndex((r, i) => !r.sudden && !game.results[i]);
-    return { allMainDone, reached, sudden, next, tied: game.scores[0] === game.scores[1] };
+    return { allMainDone, reached, sudden, next, tied: scores[0] === scores[1] };
   }
 
   /* =========================================================
@@ -379,6 +396,7 @@
     if (game.fm.player === p) return;
     snapshot();
     stopTimer();
+    fmSeq++;
     game.fm.player = p;
     game.fm.timer = { duration: fmDuration(p), remaining: fmDuration(p), running: false };
     if (p === 1 && game.fm.rows[0].some((e) => e.showText)) game.fm.hideP1 = true;
@@ -387,6 +405,7 @@
 
   function checkFmWin(fx) {
     const total = fmTotal();
+    if (total < setup.bonusTarget) game.fm.celebrated = false;
     if (!game.fm.celebrated && total >= setup.bonusTarget) {
       game.fm.celebrated = true;
       fx.push({ type: 'fmWin', total });
@@ -439,14 +458,15 @@
   }
   function fmPick(i, text, pts) {
     const e = game.fm.rows[game.fm.player][i];
+    snapshot();
     if (text != null) e.text = text;
     e.pts = pts;
-    save();
-    if (e.showText || e.showPts) broadcast([]);
-    renderFast();
+    const fx = [];
+    checkFmWin(fx);
+    commit(fx);
   }
   function fmReset() {
-    if (!confirm('Clear all bonus-round answers and reset the timer?')) return;
+    if (!confirm('Clear all bonus-round answers, remove their points from the team scores, and reset the timer?')) return;
     snapshot();
     stopTimer();
     fmSeq++;
@@ -537,12 +557,14 @@
   }
 
   function renderScores() {
+    const scores = SS.finalScores(game);
+    const bonus = SS.fastScores(game.fm);
     const html = [0, 1].map((t) => `
       <div class="score-row ${t === 0 ? 'a' : 'b'}">
-        <div class="nm">${esc(teamName(t))}</div>
+        <div class="nm">${esc(teamName(t))}<div class="small muted">Includes ${bonus[t]} Fast Money points</div></div>
         <div class="score-ctl">
           <button data-action="scoreAdj" data-t="${t}" data-d="-5" title="−5">−</button>
-          <input type="number" id="score-${t}" data-score="${t}" value="${game.scores[t]}">
+          <input type="number" id="score-${t}" data-score="${t}" value="${scores[t]}">
           <button data-action="scoreAdj" data-t="${t}" data-d="5" title="+5">+</button>
         </div>
       </div>`).join('') +
@@ -602,7 +624,7 @@
           <span style="flex:1"></span><button class="btn primary" data-action="startRound" data-i="${st.sudden}">Play Sudden Death</button></div>`;
       } else {
         const w = computeWinner();
-        banner = `<div class="banner win">That was the last round. ${w === -1 ? "It's a tie!" : `Winner: <b>${esc(teamName(w))}</b>, ${Math.max(...game.scores)} to ${Math.min(...game.scores)}.`}
+        banner = `<div class="banner win">That was the last round. ${w === -1 ? "It's a tie!" : `Winner: <b>${esc(teamName(w))}</b>, ${Math.max(...SS.finalScores(game))} to ${Math.min(...SS.finalScores(game))}.`}
           <span style="flex:1"></span>
           <button class="btn primary" data-action="screen" data-v="winner">Show winner screen</button>
           <button class="btn" data-action="gotoFast">Go to ${esc(setup.bonusName)}</button></div>`;
@@ -765,8 +787,9 @@
           <button class="btn" data-action="fmTimerReset">Reset</button>
           <button class="btn red" data-action="fmDuplicate">Duplicate! <kbd>D</kbd></button>
         </div>
-        <div class="fm-total-box"><div class="v">${total}</div><div class="l">Total · goal ${setup.bonusTarget}</div></div>
+        <div class="fm-total-box"><div class="v" id="fm-op-total">${total}</div><div class="l">Total · goal ${setup.bonusTarget}</div></div>
       </div>
+      <p class="muted small">Player 1 → ${esc(setup.teamA)} (left team) · Player 2 → ${esc(setup.teamB)} (right team). Revealed points automatically count toward each team's final score.</p>
       ${cards}
       <div class="fm-bottom">
         <button class="btn primary big" data-action="fmRevealAll">Reveal all for Player ${p + 1}</button>
@@ -934,7 +957,7 @@
       case 'toggleQuestion': toggleQuestion(); break;
       case 'screen': setScreen(el.dataset.v); break;
       case 'setWinner': setWinner(t); break;
-      case 'scoreAdj': setScore(t, game.scores[t] + parseInt(el.dataset.d, 10)); break;
+      case 'scoreAdj': setScore(t, SS.finalScores(game)[t] + parseInt(el.dataset.d, 10)); break;
       case 'stopMusic': SFX.stopMusic(1.2); break;
       case 'gotoFast': switchTab('fast'); break;
       case 'fmPlayer': fmSetPlayer(parseInt(el.dataset.v, 10)); break;
@@ -957,10 +980,17 @@
     if (el.dataset.fm) {
       const i = parseInt(el.dataset.i, 10);
       const e = game.fm.rows[game.fm.player][i];
+      snapshot();
       if (el.dataset.fm === 'text') e.text = el.value;
       else e.pts = Math.max(0, parseInt(el.value, 10) || 0);
+      const fx = [];
+      checkFmWin(fx);
       save();
-      if (e.showText || e.showPts) broadcast([]);
+      renderScores();
+      renderRoundPanel();
+      $('fm-op-total').textContent = fmTotal();
+      $('btn-undo').disabled = !undoStack.length;
+      if (e.showText || e.showPts) broadcast(fx);
     }
   });
   document.addEventListener('change', (ev) => {
