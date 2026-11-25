@@ -242,21 +242,6 @@ body.hide-cursor, body.hide-cursor * { cursor: none !important; }
 .fm-col.hidden-col .fm-row { background: linear-gradient(180deg, var(--red) 0%, var(--red-lo) 100%); border-color: rgba(255, 214, 120, 0.35); }
 .fm-col.hidden-col .fm-ans span, .fm-col.hidden-col .fm-pts span { opacity: 0 !important; }
 .fm-col.hidden-col .fm-pts { background: rgba(0, 0, 0, 0.35) !important; }
-.fm-total { position: absolute; top: 794px; left: 50%; transform: translateX(-50%); height: 86px; padding: 0 34px; display: flex; align-items: center; gap: 26px; border-radius: 18px;
-  background: linear-gradient(180deg, #0c1a3a, #050c20); border: 4px solid var(--gold-mid); box-shadow: 0 0 30px rgba(255, 200, 70, 0.35); }
-.fm-total .lbl { font-family: var(--display); font-size: 40px; text-transform: uppercase; letter-spacing: 3px; color: var(--ivory); }
-.fm-total .val { font-family: var(--heavy); font-size: 60px; min-width: 120px; text-align: right; background: var(--gold-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.fm-total.reached { animation: bumpTotal 0.6s ease 3; border-color: #fff; }
-@keyframes bumpTotal { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.12); } }
-.fm-goal { position: absolute; right: 70px; top: 822px; font-family: var(--heavy); font-size: 22px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255, 240, 200, 0.7); }
-.fm-win { position: absolute; left: 180px; top: 332px; width: 1240px; height: 440px; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 3; }
-.fm-win.show { opacity: 1; }
-.fm-win-inner { text-align: center; padding: 30px 80px; border-radius: 30px; background: rgba(4, 10, 26, 0.88); border: 5px solid var(--gold); box-shadow: 0 0 80px rgba(255, 210, 87, 0.6); transform: scale(0.7); transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.fm-win.show .fm-win-inner { transform: scale(1); }
-.fm-win .k { font-family: var(--display); font-size: 60px; text-transform: uppercase; color: #fff; }
-.fm-win .v { font-family: var(--heavy); font-size: 140px; line-height: 1; background: var(--gold-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.fm-win .s { font-family: var(--heavy); font-size: 26px; letter-spacing: 6px; text-transform: uppercase; color: var(--gold-hi); }
-
 /* ---------- winner screen ---------- */
 .win-wrap { position: absolute; inset: 100px 60px 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .win-kicker { font-family: var(--heavy); font-size: 40px; letter-spacing: 10px; text-transform: uppercase; color: var(--ivory); }

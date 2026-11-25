@@ -140,7 +140,8 @@
   const tweens = new WeakMap();
   function setNum(el, v) {
     const tw = tweens.get(el);
-    if (tw) cancelAnimationFrame(tw.raf);
+    if (tw) { cancelAnimationFrame(tw.raf); clearTimeout(tw.to); }
+    el.classList.remove('counting');
     tweens.delete(el);
     el.dataset.val = v;
     el.textContent = v;
@@ -378,9 +379,10 @@
     if (!fm) return;
     if (!fastBuilt) buildFast();
     $('fm-head').textContent = st.bonusName;
-    $('fm-goal').textContent = 'Goal: ' + st.bonusTarget;
     [0, 1].forEach((p) => {
       $('fm-l' + (p + 1)).textContent = `Player ${p + 1} · ${st.teams[p]}`;
+      $('fm-overall-name-' + p).textContent = st.teams[p];
+      $('fm-team-total-' + p).classList.toggle('active', fm.player === p);
     });
     $('fm-l1').classList.toggle('active', fm.player === 0);
     $('fm-l2').classList.toggle('active', fm.player === 1);
@@ -392,7 +394,7 @@
     timerEl.classList.toggle('low', tm.running && tm.remaining <= 5);
 
     const pfm = prev && prev.fm;
-    let total = 0;
+    const roundScores = SS.fastScores(fm);
     for (let p = 0; p < 2; p++) {
       $('fm-col-' + p).classList.toggle('hidden-col', p === 0 && fm.hideP1);
       for (let i = 0; i < 5; i++) {
@@ -401,7 +403,6 @@
         const row = document.querySelector(`.fm-row[data-p="${p}"][data-i="${i}"]`);
         const ansSpan = row.querySelector('.fm-ans span');
         const ptsSpan = row.querySelector('.fm-pts span');
-        if (e.showPts) total += e.pts || 0;
 
         // answer text
         const wantText = e.showText ? e.text : '';
@@ -439,9 +440,17 @@
         row.classList.toggle('zero', !!e.showPts && !(e.pts > 0));
       }
     }
-    const totalEl = $('fm-total');
-    if (instant) setNum(totalEl, total); else tweenNum(totalEl, total, 700, 150);
-    totalEl.parentElement.classList.toggle('reached', total >= st.bonusTarget);
+    [0, 1].forEach((p) => {
+      const roundEl = $('fm-round-score-' + p);
+      const overallEl = $('fm-overall-score-' + p);
+      if (instant) {
+        setNum(roundEl, roundScores[p]);
+        setNum(overallEl, st.scores[p]);
+      } else {
+        tweenNum(roundEl, roundScores[p], 700, 150);
+        tweenNum(overallEl, st.scores[p], 700, 150);
+      }
+    });
   }
 
   /* ---------- winner ---------- */
@@ -484,7 +493,6 @@
     introTimer = setTimeout(() => ov.classList.remove('show'), 2700);
   }
 
-  let fmWinTimer = null;
   function runFx(f, st) {
     switch (f.type) {
       case 'strike': showX(f.count); break;
@@ -504,15 +512,6 @@
         break;
       }
       case 'confetti': confetti.rain(f.ms || 5000); break;
-      case 'fmWin': {
-        $('fm-win-val').textContent = f.total;
-        const w = $('fm-win');
-        w.classList.add('show');
-        confetti.rain(5000);
-        clearTimeout(fmWinTimer);
-        fmWinTimer = setTimeout(() => w.classList.remove('show'), 5500);
-        break;
-      }
       default: break;
     }
     void st;

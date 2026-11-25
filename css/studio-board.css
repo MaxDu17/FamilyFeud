@@ -71,7 +71,7 @@
 .fm-row.has-pts .fm-pts { background: #061638; color: #fff; }
 .fm-pts { border-color: #9ab4db; font-family: var(--display); }
 .fm-row.zero .fm-pts { background: #6b1427; }
-.fm-total, .fm-timer { border-color: #edbc65; background: linear-gradient(#164080, #061430); }
+.fm-team-total, .fm-timer { border-color: #edbc65; background: linear-gradient(#164080, #061430); }
 .win-name { width: 1300px; }
 .win-kicker { font-size: 28px; letter-spacing: 12px; }
 .win-scores .ws { border-color: #e6b75d; }
@@ -81,3 +81,17 @@
 }
 
 .fm-labels span { padding: 0 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Per-team round counters and an always-visible overall scoreboard. */
+.fm-head { left: 330px; right: 380px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fm-round-scores { position: absolute; top: 800px; left: 180px; width: 1240px; height: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.fm-team-total { justify-self: center; min-width: 335px; height: 80px; padding: 0 26px; display: flex; align-items: center; gap: 26px; border: 3px solid #b28a45; border-radius: 14px; box-shadow: 0 8px 24px #0006; }
+.fm-team-total.active { border-color: #ffdc8b; box-shadow: 0 0 24px #e9b95e33; }
+.fm-team-total .lbl { font: 20px var(--display); letter-spacing: 2px; text-transform: uppercase; color: #d7e6ff; }
+.fm-team-total .val { min-width: 100px; text-align: right; font: 58px var(--display); color: #ffe0a0; font-variant-numeric: tabular-nums; }
+.fm-overall { position: absolute; top: 42px; right: 48px; width: 300px; padding: 14px 18px; border: 2px solid #d4ad65; border-radius: 12px; background: linear-gradient(#102d61ee, #06142eee); box-shadow: 0 8px 25px #0006; }
+.fm-overall-heading { margin-bottom: 6px; font: 14px var(--heavy); letter-spacing: 3px; text-transform: uppercase; color: #ffda89; }
+.fm-overall-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 55px; }
+.fm-overall-row + .fm-overall-row { border-top: 1px solid #5576a466; }
+.fm-overall-row span { font: 25px var(--display); text-transform: uppercase; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.fm-overall-row b { font: 40px var(--display); color: #fff3ca; font-variant-numeric: tabular-nums; }

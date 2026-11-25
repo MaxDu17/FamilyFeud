@@ -11,6 +11,7 @@ function harness(saved) {
   const events = {};
   const listeners = {};
   const pending = [];
+  const sounds = [];
   const element = { addEventListener() {}, classList: { add() {}, remove() {}, toggle() {} } };
   const context = vm.createContext({
     console, JSON, Math, Date,
@@ -21,7 +22,7 @@ function harness(saved) {
     setInterval() {}, clearInterval() {},
     window: { addEventListener() {}, SOUND_LIST: [], SoundEngine: class {
       init() { return { then() {} }; }
-      setVolumes() {} play() {} stopMusic() {}
+      setVolumes() {} play(name) { sounds.push(name); } stopMusic() {}
     } },
   });
   vm.runInContext(read('js/shared.js'), context);
@@ -41,7 +42,7 @@ function harness(saved) {
   })();`, context);
   const api = context.window.test;
   return {
-    api, events,
+    api, events, sounds,
     scores: () => Array.from(api.boardState().scores),
     reload: () => harness(JSON.parse(storage.get('ss_game'))),
     flush: () => { while (pending.length) pending.shift()(); },
@@ -148,4 +149,15 @@ test('a manual winner override survives reload with the new scoring rules', () =
   a.fmPick(0, 'First', 41); a.fmShowPts(0);
   a.setScreen('winner'); a.setWinner(1);
   assert.equal(h.reload().api.boardState().winner, 1);
+});
+
+
+test('opposing teams crossing 200 combined never trigger a shared win celebration', () => {
+  const h = harness(), a = h.api;
+  a.fmPick(0, 'Left', 100); a.fmShowPts(0);
+  a.fmSetPlayer(1); a.fmPick(0, 'Right', 110); a.fmShowPts(0);
+  h.flush();
+  assert.deepEqual(h.scores(), [100, 110]);
+  assert.equal(h.sounds.includes('fanfare'), false);
+  assert.equal(h.sounds.includes('applause'), false);
 });

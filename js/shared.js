@@ -12,7 +12,6 @@
     teamB: 'The Reindeer',
     target: 300,          // first team to this many points wins (0 = just play every round)
     bonusName: 'Fast Money',
-    bonusTarget: 200,
     timer1: 20,
     timer2: 25,
   };

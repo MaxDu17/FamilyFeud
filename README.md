@@ -57,7 +57,7 @@ The sample file has 4 main rounds (×1, ×1, ×2, ×3), a sudden-death tiebreake
 - **Three strikes:** the other team gets one steal guess. If it's on the board, they win the whole bank plus that answer. If not, the playing team gets the bank.
 - **Clearing the board** before 3 strikes wins the bank automatically.
 - **Winning:** the first team to **300** wins by default. Change this in Setup, or set it to 0 to play every round and have the highest score win.
-- **Bonus round (house rule):** two players, 5 questions, 20 and 25 seconds. Player 1 scores for the left team and Player 2 for the right. Revealed points automatically count toward team totals and the final winner, even below 200. Hiding a row or resetting the bonus round removes its points; hiding the entire Player 1 column does not. Edits and Undo update the totals without counting points twice. A duplicate answer gets the "try again" sound. Reaching **200** combined still triggers the celebration.
+- **Bonus round (house rule):** two players, 5 questions, 20 and 25 seconds. Player 1 scores for the left team and Player 2 for the right. Revealed points count up separately beneath each team’s answer column, with both overall scores displayed in the corner. They count toward the final winner. Hiding a row or resetting the bonus round removes its points; hiding the entire Player 1 column does not. Edits and Undo update the totals without counting points twice. A duplicate answer gets the "try again" sound. There is no combined total or 200-point goal.
 
 Made a mistake? **Undo** (⌘Z) steps back one action, and you can type over either score in the sidebar.
 

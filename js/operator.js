@@ -25,7 +25,6 @@
       hideP1: false,
       rows: [0, 1].map(() => Array.from({ length: SS.FAST_QUESTIONS }, () => ({ text: '', pts: 0, showText: false, showPts: false }))),
       timer: { duration: setup.timer1, remaining: setup.timer1, running: false },
-      celebrated: false,
     };
   }
   function newGame() {
@@ -123,7 +122,6 @@
       phase: game.phase,
       target: setup.target,
       bonusName: setup.bonusName,
-      bonusTarget: setup.bonusTarget,
       winner: game.winner,
       round: r ? {
         uid: r.uid, label: r.label, question: r.question, showQuestion: r.showQuestion,
@@ -385,11 +383,6 @@
     while (qs.length < SS.FAST_QUESTIONS) qs.push({ question: `Question ${qs.length + 1} (add [fast] questions in Setup)`, answers: [] });
     return qs;
   }
-  function fmTotal() {
-    let t = 0;
-    game.fm.rows.forEach((col) => col.forEach((e) => { if (e.showPts) t += e.pts || 0; }));
-    return t;
-  }
   function fmDuration(p) { return p === 0 ? setup.timer1 : setup.timer2; }
 
   function fmSetPlayer(p) {
@@ -401,16 +394,6 @@
     game.fm.timer = { duration: fmDuration(p), remaining: fmDuration(p), running: false };
     if (p === 1 && game.fm.rows[0].some((e) => e.showText)) game.fm.hideP1 = true;
     commit([]);
-  }
-
-  function checkFmWin(fx) {
-    const total = fmTotal();
-    if (total < setup.bonusTarget) game.fm.celebrated = false;
-    if (!game.fm.celebrated && total >= setup.bonusTarget) {
-      game.fm.celebrated = true;
-      fx.push({ type: 'fmWin', total });
-      setTimeout(() => { play('fanfare'); setTimeout(() => play('applause'), 1500); }, 700);
-    }
   }
 
   function fmShowText(i, p = game.fm.player) {
@@ -428,16 +411,13 @@
     e.showText = true;
     e.showPts = true;
     if ((e.pts || 0) > 0) play('ding'); else play('strike');
-    const fx = [];
-    checkFmWin(fx);
-    commit(fx);
+    commit([]);
   }
   function fmHideRow(i, p = game.fm.player) {
     const e = game.fm.rows[p][i];
     snapshot();
     e.showText = false;
     e.showPts = false;
-    if (fmTotal() < setup.bonusTarget) game.fm.celebrated = false;
     commit([]);
   }
   let fmSeq = 0;
@@ -461,9 +441,7 @@
     snapshot();
     if (text != null) e.text = text;
     e.pts = pts;
-    const fx = [];
-    checkFmWin(fx);
-    commit(fx);
+    commit([]);
   }
   function fmReset() {
     if (!confirm('Clear all bonus-round answers, remove their points from the team scores, and reset the timer?')) return;
@@ -749,7 +727,7 @@
     const fm = game.fm;
     const p = fm.player;
     const qs = fastQuestions();
-    const total = fmTotal();
+    const roundScores = SS.fastScores(fm);
     const tm = fm.timer;
     const cards = qs.map((q, i) => {
       const e = fm.rows[p][i];
@@ -787,7 +765,9 @@
           <button class="btn" data-action="fmTimerReset">Reset</button>
           <button class="btn red" data-action="fmDuplicate">Duplicate! <kbd>D</kbd></button>
         </div>
-        <div class="fm-total-box"><div class="v" id="fm-op-total">${total}</div><div class="l">Total · goal ${setup.bonusTarget}</div></div>
+      </div>
+      <div class="fm-team-summary">
+        ${[0, 1].map((team) => `<div><span>${esc(teamName(team))}</span><b id="fm-op-score-${team}">${roundScores[team]}</b><small>round points</small></div>`).join('')}
       </div>
       <p class="muted small">Player 1 → ${esc(setup.teamA)} (left team) · Player 2 → ${esc(setup.teamB)} (right team). Revealed points automatically count toward each team's final score.</p>
       ${cards}
@@ -848,7 +828,7 @@
   /* =========================================================
    * Setup tab
    * ========================================================= */
-  const SETUP_FIELDS = ['title', 'teamA', 'teamB', 'target', 'bonusName', 'bonusTarget', 'timer1', 'timer2'];
+  const SETUP_FIELDS = ['title', 'teamA', 'teamB', 'target', 'bonusName', 'timer1', 'timer2'];
   function fillSetup() {
     SETUP_FIELDS.forEach((k) => { $('set-' + k).value = setup[k]; });
     $('data-text').value = dataText;
@@ -859,13 +839,12 @@
     const s = {};
     SETUP_FIELDS.forEach((k) => {
       const v = $('set-' + k).value;
-      s[k] = ['target', 'bonusTarget', 'timer1', 'timer2'].includes(k) ? Math.max(0, parseInt(v, 10) || 0) : v.trim();
+      s[k] = ['target', 'timer1', 'timer2'].includes(k) ? Math.max(0, parseInt(v, 10) || 0) : v.trim();
     });
     if (!s.title) s.title = SS.defaultSetup.title;
     if (!s.teamA) s.teamA = 'Team A';
     if (!s.teamB) s.teamB = 'Team B';
     if (!s.bonusName) s.bonusName = SS.defaultSetup.bonusName;
-    if (!s.bonusTarget) s.bonusTarget = SS.defaultSetup.bonusTarget;
     if (s.timer1 < 5) s.timer1 = 20;
     if (s.timer2 < 5) s.timer2 = 25;
     setup = Object.assign({}, setup, s);
@@ -915,7 +894,7 @@
       const lbl = r.sudden ? 'Sudden death (tiebreaker, only #1 counts)' : `Round ${++n} · ${SS.multLabel(r.mult)}`;
       return `<div class="ph-round"><h3>${esc(lbl)}</h3><div class="ph-q">${esc(r.question)}</div><table>${r.answers.map((a, i) => `<tr><td class="n">${i + 1}</td><td>${esc(a.text)}</td><td class="p">${a.pts}</td></tr>`).join('')}</table></div>`;
     }).join('');
-    const fast = parsed.fast.length ? `<div class="ph-break"></div><div class="ph-title">${esc(setup.bonusName)}</div><div class="ph-sub">Player 1: ${setup.timer1}s · Player 2: ${setup.timer2}s · Goal: ${setup.bonusTarget} points</div>` +
+    const fast = parsed.fast.length ? `<div class="ph-break"></div><div class="ph-title">${esc(setup.bonusName)}</div><div class="ph-sub">Player 1: ${setup.timer1}s · Player 2: ${setup.timer2}s · Each player scores for their own team</div>` +
       parsed.fast.map((r, i) => `<div class="ph-round"><h3>Question ${i + 1}</h3><div class="ph-q">${esc(r.question)}</div><table>${r.answers.map((a, k) => `<tr><td class="n">${k + 1}</td><td>${esc(a.text)}</td><td class="p">${a.pts}</td></tr>`).join('')}</table></div>`).join('') : '';
     $('print-area').innerHTML = `<div class="ph-title">${esc(setup.title)}: Host Sheet</div>
       <div class="ph-sub">${esc(setup.teamA)} vs ${esc(setup.teamB)} · ${setup.target > 0 ? `First to ${setup.target} wins` : 'Highest score wins'}</div>${rounds}${fast}`;
@@ -983,14 +962,12 @@
       snapshot();
       if (el.dataset.fm === 'text') e.text = el.value;
       else e.pts = Math.max(0, parseInt(el.value, 10) || 0);
-      const fx = [];
-      checkFmWin(fx);
       save();
       renderScores();
       renderRoundPanel();
-      $('fm-op-total').textContent = fmTotal();
+      SS.fastScores(game.fm).forEach((score, team) => { $('fm-op-score-' + team).textContent = score; });
       $('btn-undo').disabled = !undoStack.length;
-      if (e.showText || e.showPts) broadcast(fx);
+      if (e.showText || e.showPts) broadcast([]);
     }
   });
   document.addEventListener('change', (ev) => {

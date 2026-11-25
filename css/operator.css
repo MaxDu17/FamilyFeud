@@ -169,7 +169,7 @@ kbd { background: #0b1120; border: 1px solid var(--line); border-bottom-width: 2
 .banner.info { background: rgba(48, 164, 108, 0.12); border: 1px solid var(--green); color: #c4f0d7; }
 
 /* ---------- fast money ---------- */
-.fm-top { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
+.fm-top { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; }
 .fm-players { display: flex; gap: 4px; background: #0b1120; padding: 4px; border-radius: 10px; }
 .fm-players button { border: none; background: transparent; padding: 10px 16px; border-radius: 7px; cursor: pointer; color: var(--muted); font-weight: 800; }
 .fm-players button.active { background: var(--gold); color: #2a1a00; }
@@ -177,9 +177,6 @@ kbd { background: #0b1120; border: 1px solid var(--line); border-bottom-width: 2
 .fm-timer-num { font-size: 44px; font-weight: 900; min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
 .fm-timer-num.low { color: var(--red); }
 #fm-timer-btn { min-width: 170px; }
-.fm-total-box { text-align: right; }
-.fm-total-box .v { font-size: 34px; font-weight: 900; color: var(--gold); line-height: 1; }
-.fm-total-box .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .fm-q { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 12px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); margin-top: 10px; }
 .fm-q .num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: #2a1a00; font-weight: 900; }
 .fm-q .qt { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
@@ -279,3 +276,9 @@ label small { font-weight: 500; }
   .ph-round td.p { width: 60pt; text-align: right; font-weight: 700; }
   .ph-break { break-before: page; }
 }
+
+.fm-team-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.fm-team-summary > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; padding: 10px 14px; background: #0b1930; border: 1px solid var(--line); border-radius: 8px; }
+.fm-team-summary span { font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.fm-team-summary b { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 28px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.fm-team-summary small { color: var(--muted); }
